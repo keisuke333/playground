@@ -3,7 +3,7 @@
 namespace MyLinq.MyCollections
 {
 	// Open addressing
-	public class MyHashMap<TKey, TValue> : IMyEnumerable<KeyValuPair<TKey, TValue>>
+	public class MyHashMap<TKey, TValue> : IMyDictionary<TKey, TValue>
 	{
 		private readonly IMyEqualityComparer<TKey> _comparer;
 		private int _index;
@@ -41,7 +41,7 @@ namespace MyLinq.MyCollections
 			_comparer = comparer;
 		}
 
-		public TValue Add(TKey key, TValue value)
+		public void Add(TKey key, TValue value)
 		{
 			if (key == null)
 			{
@@ -54,7 +54,7 @@ namespace MyLinq.MyCollections
 				ExpandBucket();
 			}
 
-			var bucketIndex = ToIndex(key.GetHashCode());
+			var bucketIndex = ToIndex(_comparer.GetHashCode(key));
 			if (_buckets[bucketIndex] == -1)
 			{
 				_buckets[bucketIndex] = _index;
@@ -64,7 +64,6 @@ namespace MyLinq.MyCollections
 					Key = key,
 					Value = value
 				};
-				return value;
 			}
 
 			var existingEntry = _entries[_buckets[bucketIndex]];
@@ -88,12 +87,44 @@ namespace MyLinq.MyCollections
 				Key = key,
 				Value = value
 			};
-			return value;
+		}
+
+		// TODO: テスト
+		public bool Remove(TKey key)
+		{
+			if (key == null)
+			{
+				throw new ArgumentNullException();
+			}
+
+			var bucketIndex = ToIndex(_comparer.GetHashCode(key));
+			var entryIndex = _buckets[bucketIndex];
+			Entry previousEntry = null;
+			while (entryIndex != -1)
+			{
+				var existingEntry = _entries[entryIndex];
+				if (_comparer.Equals(existingEntry.Key, key))
+				{
+					if (previousEntry != null)
+					{
+						previousEntry.Next = -1;
+					}
+					else
+					{
+						_buckets[bucketIndex] = -1;
+					}
+					_entries[entryIndex] = null;
+					return true;
+				}
+				previousEntry = existingEntry;
+				entryIndex = existingEntry.Next;
+			}
+			return false;
 		}
 
 		public bool TryGetValue(TKey key, out TValue value)
 		{
-			var bucketIndex = ToIndex(key.GetHashCode());
+			var bucketIndex = ToIndex(_comparer.GetHashCode(key));
 			if (_buckets[bucketIndex] == -1)
 			{
 				value = default(TValue);
@@ -122,7 +153,7 @@ namespace MyLinq.MyCollections
 
 		public bool ContainsKey(TKey key)
 		{
-			var bucketIndex = ToIndex(key.GetHashCode());
+			var bucketIndex = ToIndex(_comparer.GetHashCode(key));
 			return _buckets[bucketIndex] != -1;
 		}
 

@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="MyCollections\DefaultComparer.cs" />
     <Compile Include="MyCollections\DefaultEqualityComparer.cs" />
-    <Compile Include="MyCollections\IDictionary.cs" />
+    <Compile Include="MyCollections\IMyDictionary.cs" />
     <Compile Include="MyCollections\IMyComparer.cs" />
     <Compile Include="MyCollections\IMyEnumerable.cs" />
     <Compile Include="MyCollections\IMyEnumerator.cs" />
