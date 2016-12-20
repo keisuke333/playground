@@ -1589,16 +1589,16 @@ namespace MyLinq
 						TKey outerKey;
 						if (!_outerKeyMap.TryGetValue(_outerEnumerator.Current, out outerKey))
 						{
-							outerKey = _outerKeyMap.Add(_outerEnumerator.Current,
-								_outerKeySelector(_outerEnumerator.Current));
+							outerKey = _outerKeySelector(_outerEnumerator.Current);
+							_outerKeyMap.Add(_outerEnumerator.Current, outerKey);
 						}
 						while (_innerEnumerator.MoveNext())
 						{
 							TKey innerKey;
 							if (!_innerKeyMap.TryGetValue(_innerEnumerator.Current, out innerKey))
 							{
-								innerKey = _innerKeyMap.Add(_innerEnumerator.Current,
-									_innerKeySelector(_innerEnumerator.Current));
+								innerKey = _innerKeySelector(_innerEnumerator.Current);
+								_innerKeyMap.Add(_innerEnumerator.Current, innerKey);
 							}
 							if (_comparer.Equals(outerKey, innerKey))
 							{
@@ -1614,16 +1614,16 @@ namespace MyLinq
 						TKey outerKey;
 						if (!_outerKeyMap.TryGetValue(_outerEnumerator.Current, out outerKey))
 						{
-							outerKey = _outerKeyMap.Add(_outerEnumerator.Current,
-								_outerKeySelector(_outerEnumerator.Current));
+							outerKey = _outerKeySelector(_outerEnumerator.Current);
+							_outerKeyMap.Add(_outerEnumerator.Current, outerKey);
 						}
 						while (_innerEnumerator.MoveNext())
 						{
 							TKey innerKey;
 							if (!_innerKeyMap.TryGetValue(_innerEnumerator.Current, out innerKey))
 							{
-								innerKey = _innerKeyMap.Add(_innerEnumerator.Current,
-									_innerKeySelector(_innerEnumerator.Current));
+								innerKey = _innerKeySelector(_innerEnumerator.Current);
+								_innerKeyMap.Add(_innerEnumerator.Current, innerKey);
 							}
 							if (!_comparer.Equals(outerKey, innerKey))
 							{
